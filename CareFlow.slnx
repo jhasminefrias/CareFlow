@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="CareFlow.Tests/CareFlow.Tests.csproj" />
+  <Project Path="CareFlow/CareFlow.csproj" />
+</Solution>
