@@ -1,0 +1,71 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="CareFlow.Views.MainWindow"
+        Title="CareFlow - Diagnostic Booking" Width="900" Height="620" MinWidth="720" MinHeight="500">
+  <DockPanel Margin="12">
+
+    <Border DockPanel.Dock="Bottom" Padding="8" Margin="0,8,0,0" CornerRadius="4" Background="#22888888">
+      <Panel>
+        <TextBlock Text="{Binding StatusMessage}" Foreground="Firebrick" FontWeight="SemiBold"
+                   TextWrapping="Wrap" IsVisible="{Binding IsError}" />
+        <TextBlock Text="{Binding StatusMessage}" Foreground="SeaGreen" FontWeight="SemiBold"
+                   TextWrapping="Wrap" IsVisible="{Binding !IsError}" />
+      </Panel>
+    </Border>
+
+    <TabControl>
+      <!-- NEW BOOKING -->
+      <TabItem Header="New Booking">
+        <Grid ColumnDefinitions="*,*" Margin="8">
+          <StackPanel Grid.Column="0" Spacing="10" Margin="0,0,12,0">
+            <TextBlock Text="Patient" FontWeight="SemiBold" />
+            <ComboBox ItemsSource="{Binding Patients}" SelectedItem="{Binding SelectedPatient}"
+                      PlaceholderText="Select a patient" HorizontalAlignment="Stretch">
+              <ComboBox.ItemTemplate>
+                <DataTemplate><TextBlock Text="{Binding FullName}" /></DataTemplate>
+              </ComboBox.ItemTemplate>
+            </ComboBox>
+
+            <TextBlock Text="Booking date" FontWeight="SemiBold" />
+            <DatePicker SelectedDate="{Binding BookingDate}" />
+
+            <Button Content="Confirm Booking" Command="{Binding SubmitBookingCommand}"
+                    Classes="accent" HorizontalAlignment="Left" Margin="0,12,0,0" />
+          </StackPanel>
+
+          <StackPanel Grid.Column="1" Spacing="6">
+            <TextBlock Text="Diagnostic services (choose 1 to 3)" FontWeight="SemiBold" />
+            <ItemsControl ItemsSource="{Binding Services}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <CheckBox IsChecked="{Binding IsSelected}" Content="{Binding Label}" />
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <Button Content="Refresh availability" Command="{Binding RefreshAvailabilityCommand}"
+                    HorizontalAlignment="Left" Margin="0,8,0,0" />
+          </StackPanel>
+        </Grid>
+      </TabItem>
+
+      <!-- BOOKINGS -->
+      <TabItem Header="Confirmed Bookings">
+        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,*" Margin="8">
+          <Button Grid.Row="0" Grid.Column="0" Content="Reload" Command="{Binding LoadBookingsCommand}" Margin="0,0,0,8" />
+          <ListBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Bookings}" SelectedItem="{Binding SelectedBooking}" Margin="0,0,12,0">
+            <ListBox.ItemTemplate>
+              <DataTemplate><TextBlock Text="{Binding Title}" /></DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+
+          <StackPanel Grid.Row="1" Grid.Column="1" Spacing="6" DataContext="{Binding SelectedBooking}">
+            <TextBlock Text="Booking details" FontWeight="SemiBold" />
+            <TextBlock Text="{Binding PatientName, StringFormat='Patient: {0}'}" />
+            <TextBlock Text="{Binding BookingDate, StringFormat='Date: {0:yyyy-MM-dd}'}" />
+            <TextBlock Text="{Binding ServicesText, StringFormat='Services: {0}'}" TextWrapping="Wrap" />
+          </StackPanel>
+        </Grid>
+      </TabItem>
+    </TabControl>
+  </DockPanel>
+</Window>
